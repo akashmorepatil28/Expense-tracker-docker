@@ -1,42 +1,16 @@
-#———stage1 - jar builder ————-
+# docker build phase building application
 
-# Maven image
-
-FROM maven:3.8.3-openjdk-17 AS builder 
-
-# Set working directory
-
+FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy source code from local to container
+#stage 2: running phase 
 
-COPY . /app
-
-# Build application and skip test cases
-
-#EXPOSE 8080
-
-RUN mvn clean install -DskipTests=true
-
-#ENTRYPOINT ["java", "-jar", "/expenseapp.jar"]
-
-#--------------------------------------
-# Stage 2 - app build
-#--------------------------------------
-
-# Import small size java image
-
-FROM openjdk:17-alpine
-
-WORKDIR /app 
-
-# Copy build from stage 1 (builder)
-
-COPY --from=builder /app/target/*.jar /app/target/expenseapp.jar
-
-# Expose application port 
-
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+# Copy only the built jar from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Start the application
-ENTRYPOINT ["java", "-jar", "/app/target/expenseapp.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
