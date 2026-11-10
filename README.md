@@ -1,3 +1,16 @@
+# Expenses Tracker (Dockerized)
+
+Original app: LondheShubham153/Expenses-Tracker-WebApp (Spring Boot + MySQL)
+My work: Dockerfile (multi-stage), docker-compose.yml with MySQL healthcheck, bug fix.
+
+Run: docker compose up -d --build, app on port 8080
+
+Bug fixed: "Public Key Retrieval is not allowed"
+Fix: allowPublicKeyRetrieval=true in JDBC URL
+
+Known issue: redirect after signup goes to localhost (app code, not Docker)
+---
+
 ![Language](https://img.shields.io/badge/language-Java%20-blue.svg)
 ![Technologies](https://img.shields.io/badge/technologies-Spring_boot%20-green.svg)
 ![Technologies](https://img.shields.io/badge/technologies-Spring_MVC%20-green.svg)
